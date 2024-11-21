@@ -28,7 +28,10 @@ mounts:
     source: "storage"
     source_path: "npm"
     
-  
+variables:
+  env:
+    # Add environment variables here that are static.
+    NODE_ENV: production  
 
 # The web key configures the web server running in front of your app.
 # More information: https://docs.upsun.com/create-apps/app-reference.html#web
@@ -51,7 +54,7 @@ web:
   locations:
     "/":
       passthru: true
-      
+      root: ''
     
 
 # Alternate copies of the application to run as background processes.
