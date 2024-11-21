@@ -13,27 +13,27 @@ routes:
     upstream: "api:http"
     id: api
 
-#  # API Platform Admin component
-#  https://{default}/admin:
-#    type: upstream
-#    # the first part should be your project name
-#    upstream: "admin:http"
-#    id: "admin"
-#    cache:
-#      cookies: [ '*' ]
-#      default_ttl: 0
-#      enabled: true
-#      headers: [ Accept, Accept-Language ]
-#    ssi:
-#      enabled: false
-#
-#  # Mercure Rocks app
-#  https://mercure.{default}:
-#    type: upstream
-#    # the first part should be your project name
-#    upstream: "mercure:http"
-#    cache:
-#      enabled: false
+  # API Platform Admin component
+  https://{default}/admin:
+    type: upstream
+    # the first part should be your project name
+    upstream: "admin:http"
+    id: "admin"
+    cache:
+      cookies: [ '*' ]
+      default_ttl: 0
+      enabled: true
+      headers: [ Accept, Accept-Language ]
+    ssi:
+      enabled: false
+
+  # Mercure Rocks app
+  https://mercure.{default}:
+    type: upstream
+    # the first part should be your project name
+    upstream: "mercure:http"
+    cache:
+      enabled: false
 
 services:
   database:
@@ -109,137 +109,137 @@ applications:
       root: api
   # Complete list of all available properties: https://docs.upsun.com/create-apps/app-reference.html
 
-#  # A unique name for the app
-#  admin:
-#    # The runtime the application uses.
-#    type: nodejs:20
-#    # How many resources to devote to the app. If not set, default to the predefined runtime definition.
-#    # For more information, please see https://docs.upsun.com/manage-resources/adjust-resources.html#advanced-container-profiles
-#    container_profile: BALANCED
-#
-#    # Mounts define directories that are writable after the build is complete. If set as a local source, disk property is required.
-#    mounts:
-#      '/.tmp_platformsh': { source: "storage", source_path: "files/tmp_platformsh" }
-#      '/build': { source: "storage", source_path: "files/build" }
-#      '/.cache': { source: "storage", source_path: "files/.cache" }
-#      '/node_modules/.cache': { source: "storage", source_path: "files/node_modules/.cache" }
-#    # The web key configures the web server running in front of your app.
-#    web:
-#
-#      # Each key in locations is a path on your site with a leading /.
-#      locations:
-#        "/admin":
-#          root: "build"
-#          passthru: "/admin/index.html"
-#          index:
-#            - "index.html"
-#          expires: 300s
-#          scripts: true
-#          allow: false
-#          rules:
-#            .(css|js|gif|jpe?g|png|ttf|eot|woff2?|otf|html|ico|svg?)$:
-#              allow: true
-#            ^/admin/robots.txt$:
-#              allow: true
-#            ^/admin/manifest.json$:
-#              allow: true
-#            ^/admin/_next:
-#              allow: true
-#            ^/admin/sitemap:
-#              allow: true
-#          headers:
-#            Access-Control-Allow-Origin: "*"
-#        #commands:
-#        # The command to launch your app. If it terminates, it's restarted immediately.
-#        #start: npm start
-#    # Variables to control the environment.
-#    variables:
-#      env:
-#        NODE_OPTIONS: '--max-old-space-size=1536'
-#    #dependencies:
-#    #  nodejs:
-#    #    yarn: "1.22.5"
-#    # Specifies a default set of build tasks to run. Flavors are language-specific.
-#    build:
-#      flavor: none
-#    # Hooks allow you to customize your code/environment as the project moves through the build and deploy stages
-#    hooks:
-#      # The build hook is run after any build flavor.
-#      build: |
-#        set -eu
-#        corepack yarn install --immutable --force
-#      # The post_deploy hook is run after the app container has been started and after it has started accepting requests.
-#      post_deploy: |
-#        corepack yarn build
-#
-#    # Information on the app's source code and operations that can be run on it.
-#    source:
-#      # The path where the app code lives. Defaults to the directory of the .upsun/config.yaml file. Useful for multi-app setups.
-#      root: admin
-#  # Complete list of all available properties: https://docs.upsun.com/create-apps/app-reference.html
-#
-#  # A unique name for the app
-#  mercure:
-#    # The runtime the application uses.
-#    type: golang:1.21
-#
-#    # Mounts define directories that are writable after the build is complete. If set as a local source, disk property is required.
-#    mounts:
-#      "database": { source: "storage", source_path: "database" }
-#      "/.local": { source: "storage", source_path: ".local" }
-#      "/.config": { source: "storage", source_path: ".config" }
-#    # The web key configures the web server running in front of your app.
-#    web:
-#      # Commands are run once after deployment to start the application process.
-#      commands:
-#        # The command to launch your app. If it terminates, it's restarted immediately.
-#        start: ./mercure run --config Caddyfile.upsun
-#      # Each key in locations is a path on your site with a leading /.
-#      locations:
-#        /:
-#          passthru: true
-#          scripts: false
-#          allow: true
-#          request_buffering:
-#            enabled: false
-#          headers:
-#            Access-Control-Allow-Origin: "*"
-#    # Variables to control the environment.
-#    variables:
-#      env:
-#        MERCUREVERSION: 0.14.4
-#        SERVER_NAME: ":8888"
-#        MERCURE_TRANSPORT_URL: "bolt:///var/run/mercure.db?size=1000&cleanup_frequency=0.5"
-#        MERCURE_EXTRA_DIRECTIVES: |
-#          cors_origin *
-#          publish_origins *
-#          subscriptions
-#          demo
-#        GLOBAL_OPTIONS: |
-#          auto_https off
-#        MERCURE_PUBLISHER_JWT_KEY: "!ChangeThisMercureHubJWTSecretKey!"
-#        MERCURE_SUBSCRIBER_JWT_KEY: "!ChangeThisMercureHubJWTSecretKey!"
-#    # Specifies a default set of build tasks to run. Flavors are language-specific.
-#    build:
-#      flavor: none
-#    # Hooks allow you to customize your code/environment as the project moves through the build and deploy stages
-#    hooks:
-#      # The build hook is run after any build flavor.
-#      build: |
-#        # Install Mercure using cache
-#        FILE="mercure_${MERCUREVERSION}_Linux_x86_64.tar.gz"
-#        if [ ! -f "$PLATFORM_CACHE_DIR/$FILE" ]; then
-#          URL="https://github.com/dunglas/mercure/releases/download/v${MERCUREVERSION}/$FILE"
-#          wget -O "$PLATFORM_CACHE_DIR/$FILE" $URL
-#        else
-#          echo "Found $FILE in cache, using cache"
-#        fi
-#        file $PLATFORM_CACHE_DIR/$FILE
-#        tar xvzf $PLATFORM_CACHE_DIR/$FILE
-#    # Information on the app's source code and operations that can be run on it.
-#    source:
-#      # The path where the app code lives. Defaults to the directory of the .upsun/config.yaml file. Useful for multi-app setups.
-#      root: mercure/.config
-#      
+  # A unique name for the app
+  admin:
+    # The runtime the application uses.
+    type: nodejs:20
+    # How many resources to devote to the app. If not set, default to the predefined runtime definition.
+    # For more information, please see https://docs.upsun.com/manage-resources/adjust-resources.html#advanced-container-profiles
+    container_profile: BALANCED
+
+    # Mounts define directories that are writable after the build is complete. If set as a local source, disk property is required.
+    mounts:
+      '/.tmp_platformsh': { source: "storage", source_path: "files/tmp_platformsh" }
+      '/build': { source: "storage", source_path: "files/build" }
+      '/.cache': { source: "storage", source_path: "files/.cache" }
+      '/node_modules/.cache': { source: "storage", source_path: "files/node_modules/.cache" }
+    # The web key configures the web server running in front of your app.
+    web:
+
+      # Each key in locations is a path on your site with a leading /.
+      locations:
+        "/admin":
+          root: "build"
+          passthru: "/admin/index.html"
+          index:
+            - "index.html"
+          expires: 300s
+          scripts: true
+          allow: false
+          rules:
+            .(css|js|gif|jpe?g|png|ttf|eot|woff2?|otf|html|ico|svg?)$:
+              allow: true
+            ^/admin/robots.txt$:
+              allow: true
+            ^/admin/manifest.json$:
+              allow: true
+            ^/admin/_next:
+              allow: true
+            ^/admin/sitemap:
+              allow: true
+          headers:
+            Access-Control-Allow-Origin: "*"
+        #commands:
+        # The command to launch your app. If it terminates, it's restarted immediately.
+        #start: npm start
+    # Variables to control the environment.
+    variables:
+      env:
+        NODE_OPTIONS: '--max-old-space-size=1536'
+    #dependencies:
+    #  nodejs:
+    #    yarn: "1.22.5"
+    # Specifies a default set of build tasks to run. Flavors are language-specific.
+    build:
+      flavor: none
+    # Hooks allow you to customize your code/environment as the project moves through the build and deploy stages
+    hooks:
+      # The build hook is run after any build flavor.
+      build: |
+        set -eu
+        corepack yarn install --immutable --force
+      # The post_deploy hook is run after the app container has been started and after it has started accepting requests.
+      post_deploy: |
+        corepack yarn build
+
+    # Information on the app's source code and operations that can be run on it.
+    source:
+      # The path where the app code lives. Defaults to the directory of the .upsun/config.yaml file. Useful for multi-app setups.
+      root: admin
+  # Complete list of all available properties: https://docs.upsun.com/create-apps/app-reference.html
+
+  # A unique name for the app
+  mercure:
+    # The runtime the application uses.
+    type: golang:1.21
+
+    # Mounts define directories that are writable after the build is complete. If set as a local source, disk property is required.
+    mounts:
+      "database": { source: "storage", source_path: "database" }
+      "/.local": { source: "storage", source_path: ".local" }
+      "/.config": { source: "storage", source_path: ".config" }
+    # The web key configures the web server running in front of your app.
+    web:
+      # Commands are run once after deployment to start the application process.
+      commands:
+        # The command to launch your app. If it terminates, it's restarted immediately.
+        start: ./mercure run --config Caddyfile.upsun
+      # Each key in locations is a path on your site with a leading /.
+      locations:
+        /:
+          passthru: true
+          scripts: false
+          allow: true
+          request_buffering:
+            enabled: false
+          headers:
+            Access-Control-Allow-Origin: "*"
+    # Variables to control the environment.
+    variables:
+      env:
+        MERCUREVERSION: 0.14.4
+        SERVER_NAME: ":8888"
+        MERCURE_TRANSPORT_URL: "bolt:///var/run/mercure.db?size=1000&cleanup_frequency=0.5"
+        MERCURE_EXTRA_DIRECTIVES: |
+          cors_origin *
+          publish_origins *
+          subscriptions
+          demo
+        GLOBAL_OPTIONS: |
+          auto_https off
+        MERCURE_PUBLISHER_JWT_KEY: "!ChangeThisMercureHubJWTSecretKey!"
+        MERCURE_SUBSCRIBER_JWT_KEY: "!ChangeThisMercureHubJWTSecretKey!"
+    # Specifies a default set of build tasks to run. Flavors are language-specific.
+    build:
+      flavor: none
+    # Hooks allow you to customize your code/environment as the project moves through the build and deploy stages
+    hooks:
+      # The build hook is run after any build flavor.
+      build: |
+        # Install Mercure using cache
+        FILE="mercure_${MERCUREVERSION}_Linux_x86_64.tar.gz"
+        if [ ! -f "$PLATFORM_CACHE_DIR/$FILE" ]; then
+          URL="https://github.com/dunglas/mercure/releases/download/v${MERCUREVERSION}/$FILE"
+          wget -O "$PLATFORM_CACHE_DIR/$FILE" $URL
+        else
+          echo "Found $FILE in cache, using cache"
+        fi
+        file $PLATFORM_CACHE_DIR/$FILE
+        tar xvzf $PLATFORM_CACHE_DIR/$FILE
+    # Information on the app's source code and operations that can be run on it.
+    source:
+      # The path where the app code lives. Defaults to the directory of the .upsun/config.yaml file. Useful for multi-app setups.
+      root: mercure/.config
+
   next:
     !include ../next/.upsun/config.yaml
