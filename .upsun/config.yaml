@@ -1,5 +1,3 @@
-!include ../next/.upsun/config.yaml
-
 routes:
   # BigFoot API
   https://{default}:
@@ -243,4 +241,5 @@ applications:
       # The path where the app code lives. Defaults to the directory of the .upsun/config.yaml file. Useful for multi-app setups.
       root: mercure/.config
       
-  
+  next:
+    !include ../next/.upsun/config.yaml
