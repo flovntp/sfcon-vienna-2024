@@ -3,6 +3,8 @@
 source:
   root: "/next"
 
+container_profile: BALANCED
+
 # The runtime the application uses.
 # Complete list of available runtimes: https://docs.upsun.com/create-apps/app-reference.html#types
 type: "nodejs:20"
