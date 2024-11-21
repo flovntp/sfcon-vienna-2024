@@ -68,10 +68,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:list', 'user:item'])]
     private \DateTimeInterface $agreedToTermsAt;
 
+    #[ORM\OneToMany(mappedBy: 'people', targetEntity: Address::class)]
+    #[Groups(['user:list', 'user:item'])]
+    private Collection $addresses;
+    
     public function __construct()
     {
         $this->bigFootSightings = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->addresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -243,4 +248,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // add $this->salt too if you don't use Bcrypt or Argon2i
         [$this->id, $this->username, $this->password] = $data;
     }
+
+    /**
+     * @return Collection<int, Address>
+     */
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(Address $address): static
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses->add($address);
+            $address->setPeople($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): static
+    {
+        if ($this->addresses->removeElement($address)) {
+            // set the owning side to null (unless already changed)
+            if ($address->getPeople() === $this) {
+                $address->setPeople(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

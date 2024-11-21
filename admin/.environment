@@ -1,0 +1,6 @@
+# admin/.environment
+export REACT_APP_PUBLIC_URL=$(echo $PLATFORM_ROUTES | base64 --decode | jq -r 'to_entries[] | select(.value.id == "api") | .key')api
+export PUBLIC_URL=$(echo $PLATFORM_ROUTES | base64 --decode | jq -r 'to_entries[] | select(.value.id == "admin") | .key')
+
+# Admin Site Name
+export REACT_APP_ADMIN_SITE_NAME="Admin API Upsun"

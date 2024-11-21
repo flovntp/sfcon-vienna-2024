@@ -1,5 +1,19 @@
 type Query {
   node(id: ID!): Node
+  addresses(
+    "Returns the first n elements from the list."
+    first: Int
+
+    "Returns the last n elements from the list."
+    last: Int
+
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+  ): AddressCursorConnection
+  address(id: ID!): Address
   bigFootSightings(
     "Returns the first n elements from the list."
     first: Int
@@ -50,43 +64,30 @@ interface Node {
   id: ID!
 }
 
-"Cursor connection for BigFootSighting."
-type BigFootSightingCursorConnection {
-  edges: [BigFootSightingEdge]
-  pageInfo: BigFootSightingPageInfo!
+"Cursor connection for Address."
+type AddressCursorConnection {
+  edges: [AddressEdge]
+  pageInfo: AddressPageInfo!
   totalCount: Int!
 }
 
-"Edge of BigFootSighting."
-type BigFootSightingEdge {
-  node: BigFootSighting
+"Edge of Address."
+type AddressEdge {
+  node: Address
   cursor: String!
 }
 
-type BigFootSighting implements Node {
+type Address implements Node {
   id: ID!
   _id: Int!
-  title: String!
-  description: String!
-  confidenceIndex: Int!
-  latitude: String!
-  longitude: String!
-  owner: User!
-  createdAt: String!
-  comments(
-    "Returns the first n elements from the list."
-    first: Int
-
-    "Returns the last n elements from the list."
-    last: Int
-
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-  ): CommentCursorConnection
-  score: Int!
+  street: String
+  housenumber: String
+  zipcode: String
+  city: String
+  country: String
+  people: User
+  latitude: String
+  longitude: String
 }
 
 type User implements Node {
@@ -126,6 +127,19 @@ type User implements Node {
     after: String
   ): CommentCursorConnection
   agreedToTermsAt: String!
+  addresses(
+    "Returns the first n elements from the list."
+    first: Int
+
+    "Returns the last n elements from the list."
+    last: Int
+
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+  ): AddressCursorConnection
 
   "Returns the salt that was originally used to encode the password."
   salt: String
@@ -136,6 +150,45 @@ type User implements Node {
 
 "The `Iterable` scalar type represents an array or a Traversable with any kind of data."
 scalar Iterable
+
+"Cursor connection for BigFootSighting."
+type BigFootSightingCursorConnection {
+  edges: [BigFootSightingEdge]
+  pageInfo: BigFootSightingPageInfo!
+  totalCount: Int!
+}
+
+"Edge of BigFootSighting."
+type BigFootSightingEdge {
+  node: BigFootSighting
+  cursor: String!
+}
+
+type BigFootSighting implements Node {
+  id: ID!
+  _id: Int!
+  title: String!
+  description: String!
+  confidenceIndex: Int!
+  latitude: String!
+  longitude: String!
+  owner: User!
+  createdAt: String!
+  comments(
+    "Returns the first n elements from the list."
+    first: Int
+
+    "Returns the last n elements from the list."
+    last: Int
+
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+  ): CommentCursorConnection
+  score: Int!
+}
 
 "Cursor connection for Comment."
 type CommentCursorConnection {
@@ -175,6 +228,14 @@ type BigFootSightingPageInfo {
   hasPreviousPage: Boolean!
 }
 
+"Information about the current page."
+type AddressPageInfo {
+  endCursor: String
+  startCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
 "Cursor connection for User."
 type UserCursorConnection {
   edges: [UserEdge]
@@ -197,6 +258,15 @@ type UserPageInfo {
 }
 
 type Mutation {
+  "Updates a Address."
+  updateAddress(input: updateAddressInput!): updateAddressPayload
+
+  "Deletes a Address."
+  deleteAddress(input: deleteAddressInput!): deleteAddressPayload
+
+  "Creates a Address."
+  createAddress(input: createAddressInput!): createAddressPayload
+
   "Updates a BigFootSighting."
   updateBigFootSighting(input: updateBigFootSightingInput!): updateBigFootSightingPayload
 
@@ -223,6 +293,57 @@ type Mutation {
 
   "Creates a User."
   createUser(input: createUserInput!): createUserPayload
+}
+
+"Updates a Address."
+input updateAddressInput {
+  id: ID!
+  street: String
+  housenumber: String
+  zipcode: String
+  city: String
+  country: String
+  people: String
+  latitude: String
+  longitude: String
+  clientMutationId: String
+}
+
+"Updates a Address."
+type updateAddressPayload {
+  address: Address
+  clientMutationId: String
+}
+
+"Deletes a Address."
+input deleteAddressInput {
+  id: ID!
+  clientMutationId: String
+}
+
+"Deletes a Address."
+type deleteAddressPayload {
+  address: Address
+  clientMutationId: String
+}
+
+"Creates a Address."
+input createAddressInput {
+  street: String
+  housenumber: String
+  zipcode: String
+  city: String
+  country: String
+  people: String
+  latitude: String
+  longitude: String
+  clientMutationId: String
+}
+
+"Creates a Address."
+type createAddressPayload {
+  address: Address
+  clientMutationId: String
 }
 
 "Updates a BigFootSighting."
@@ -332,6 +453,7 @@ input updateUserInput {
   roles: Iterable
   bigFootSightings: [String]
   agreedToTermsAt: String
+  addresses: [String]
   clientMutationId: String
 }
 
@@ -362,6 +484,7 @@ input createUserInput {
   roles: Iterable!
   bigFootSightings: [String]
   agreedToTermsAt: String!
+  addresses: [String]
   clientMutationId: String
 }
 
@@ -370,3 +493,4 @@ type createUserPayload {
   user: User
   clientMutationId: String
 }
+
