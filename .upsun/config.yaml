@@ -1,6 +1,15 @@
+!include ../next/.upsun/config.yaml
+
 routes:
   # BigFoot API
   https://{default}:
+    type: upstream
+    # the first part should be your project name
+    upstream: "next:http"
+    id: next
+    
+  # BigFoot API
+  https://{default}/back:
     type: upstream
     # the first part should be your project name
     upstream: "api:http"
@@ -52,7 +61,7 @@ applications:
     web:
       # Each key in locations is a path on your site with a leading /.
       locations:
-        "/":
+        "/back":
           root: "public"
           passthru: '/index.php'
           index:
@@ -233,3 +242,5 @@ applications:
     source:
       # The path where the app code lives. Defaults to the directory of the .upsun/config.yaml file. Useful for multi-app setups.
       root: mercure/.config
+      
+  
