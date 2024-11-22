@@ -10,4 +10,4 @@ when@prod:
       path: '../src/Controller/'
       namespace: App\Controller
     type: attribute
-    prefix: '/back'
+    prefix: '/back/'
