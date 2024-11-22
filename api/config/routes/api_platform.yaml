@@ -2,3 +2,7 @@ api_platform:
     resource: .
     type: api_platform
     prefix: /api
+    
+when@prod:
+    api_platform:
+        prefix: /back/api

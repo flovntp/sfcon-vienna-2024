@@ -22,10 +22,10 @@ framework:
     php_errors:
         log: true
 
-#when@prod:
-#    framework:
-#        assets:
-#            base_path: '/api'
+when@prod:
+    framework:
+        assets:
+            base_path: '/back'
 
 when@test:
     framework:
